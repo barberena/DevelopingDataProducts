@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Los Angeles County</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Los Angeles County">
+  <meta name="author" content="Steven Barberena">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <aside class="gdbar">
+    <img src="assets/img/Patch_of_the_Los_Angeles_County_Sheriff's_Department.png">
+  </aside>
+  <hgroup class="auto-fadein">
+    <h1>Los Angeles County</h1>
+    <h2>Crime Map Markers 2011 to 2015</h2>
+    <p>Steven Barberena<br/>Integration Software Engineer</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Los Angeles County Crime 2011 to 2015</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Crime effects people and communities.  The <a href="https://barberena.shinyapps.io/LACCrimes/">Los Angeles County Crime</a> Shiny Applicaiton
+marks the locaiton of crimes that occur within the juristiction of Los Angeles
+County.  It allows the user to explore the county and discover crimes at a given
+location. </p>
+
+<p><img class=center src=assets/img/LACCrime.png height=450></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>The Application Parameters</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img class=center src=assets/img/LACCrimeParameters.png height=200></p>
+
+<p>There are two parameters that a user can change.</p>
+
+<ol>
+<li><p>Year - When loading the data, the application determines all years avaliable and
+dynamically builds the selectable items.  The user can then select from the years.</p></li>
+<li><p>Crime Type - This selection field also is dynamically created during the loading of
+the data to determine what crime types are avaliable across all years.</p></li>
+</ol>
+
+<p>Changing any of these parameters results in the map being automatically updated.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>The Application Map</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><img class=center src=assets/img/LACCrimeMap.png height=350></p>
+
+<p>The map allows the user to perform many actions including panning around, zooming in
+and out, as well as selecting markers to read details about a given incident.</p>
+
+<p>Notice that just above the map are the parameters that the user selected and are being used
+by the map as well as the number of incident types found for the given parameters selected.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>The Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The data used for the Shiny Application was found at the <a href="http://publicsafetydataportal.org/all-data/">Public Safety Open Data Portal</a>.
+The data can be downloaded from the <a href="https://data.lacounty.gov/Criminal/LA-SHERIFF-CRIMES-FROM-2004-TO-2015/3dxh-c6jw">Los Angles County Open Data</a>
+web site.  The data is retrieved by using the &quot;export&quot; tool and saved as a CSV file.</p>
+
+<pre><code class="r">sourceUrl &lt;- &quot;https://data.lacounty.gov/api/views/3dxh-c6jw/rows.csv?accessType=DOWNLOAD&quot;
+targetFile &lt;- &quot;LA_SHERIFF_CRIMES_FROM_2004_TO_2015.csv&quot;
+
+# if we haven&#39;t already downloaded the file, download it
+if (!file.exists(targetFile))
+    download.file(sourceUrl, destfile = targetFile)
+</code></pre>
+
+<p>The amount of data that was provided by Los Angles County goes back 12 year.
+Using all that data causes Shiny to run very slowly.  To speed up the Shiny App,
+the data used was filtered to the last 5 years.</p>
+
+<p>The source for the Shiny App and the Slidify Presentation is located at
+<a href="https://github.com/barberena/DevelopingDataProducts">GitHub</a>. In that project,
+a research folder contains the R scripts used to download, explore, tidy,
+subset and save the data.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Los Angeles County Crime 2011 to 2015'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='The Application Parameters'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='The Application Map'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='The Data'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

@@ -1,0 +1,194 @@
+---
+title: "Public Safety - LA County Sheriff Crimes from 2004 to 2015"
+output: html_document
+keep_md: yes
+---
+
+## Introduction
+Crime impacts communities.
+
+This analysis explores the data collected by the Los Angeles County
+Sheriff's Department (LACSD) from the years 2004 to 2015.  This data was
+exported from LACSD's RMS (Records Management System).  The data analyzed
+is located at https://data.lacounty.gov/Criminal/LA-SHERIFF-CRIMES-FROM-2004-TO-2015/3dxh-c6jw
+
+## Synopsis
+The following are the findings from the analysis:
+
+
+## Data Processing
+
+Load packages that are needed for the processing of the data, generation of the
+graphical figures and analysis of the data.
+
+```{r loadLibraries, results='hide', message=FALSE, warning=FALSE}
+library(plyr)
+library(dplyr)
+library(ggplot2)
+library(grid)
+library(gridExtra)
+library(ggmap)
+```
+
+Define functions that are needed.
+
+```{r DefineFunctions}
+
+```
+
+
+Download and read the LACSD Crime Data file into memory.
+
+```{r DownloadAndRead, cache=TRUE}
+sourceUrl <- "https://data.lacounty.gov/api/views/3dxh-c6jw/rows.csv?accessType=DOWNLOAD"
+targetFile <- "LA_SHERIFF_CRIMES_FROM_2004_TO_2015.csv"
+
+# if we haven't already downloaded the file, download it
+if (!file.exists(targetFile))
+    download.file(sourceUrl, destfile = targetFile)
+
+# read the file into memory making empty fields NA
+crimeData <- read.csv(targetFile, na.strings=c("", "NA"))
+```
+
+Quickly review the data
+```{r ReviewData, cache=TRUE}
+summary(crimeData)
+
+```
+
+
+
+Tidy the data.  There are several issues with the data.  Zip codes are missing in several row.  Latitude and Longitude are also missing in several rows. Several Latitude and Longitude points are outside the LAC area, with points as far north as Bakersfield, and as far south as San Diego.  Since the final output will use Lat/Long, rows with missing values will be removed as well as the points outside the LAC boundaries.  The zip code column will be removed entirely.
+
+```{r TidyData, cache=TRUE}
+# remove columns not needed
+crimeData <- subset(crimeData, select= -c(ZIP,GEO_CRIME_LOCATION))
+
+# remove rows where NA is in LAT or Long
+crimeData <- crimeData[complete.cases(crimeData[,c("LATITUDE","LONGITUDE")]),] 
+
+# remove rows where LAT and/or Long are outside the LAC area
+crimeData <- crimeData[crimeData$LATITUDE <= 34.337306,]
+crimeData <- crimeData[crimeData$LATITUDE >= 33.703652,]
+crimeData <- crimeData[crimeData$LONGITUDE >= -118.668176,]
+crimeData <- crimeData[crimeData$LONGITUDE <= -118.155289,]
+
+summary(crimeData)
+```
+
+A simple plot of all the points in LAC.
+
+```{r FullCityPlot, cache=TRUE}
+#Using GGPLOT, plot the City Map for all years
+lac <- get_map(location=c(lon=-118.411732, lat=34.020479), zoom="auto",  maptype="roadmap") 
+map = ggmap(lac)
+
+mapPoints <- map + geom_point(data=crimeData, aes(x=LONGITUDE, y=LATITUDE, colour=factor(CRIME_CATEGORY_DESCRIPTION)), alpha=.5, size=1) + theme(legend.position = "none")
+
+mapPoints
+```
+
+We can make the Shiny map show crimes for the years from 2004 to 2015.
+
+```{r splitDataByYear, cache=TRUE}
+crime2004 <- crimeData[crimeData$CRIME_YEAR == 2004,]
+crime2005 <- crimeData[crimeData$CRIME_YEAR == 2005,]
+crime2006 <- crimeData[crimeData$CRIME_YEAR == 2006,]
+crime2007 <- crimeData[crimeData$CRIME_YEAR == 2007,]
+crime2008 <- crimeData[crimeData$CRIME_YEAR == 2008,]
+crime2009 <- crimeData[crimeData$CRIME_YEAR == 2009,]
+crime2010 <- crimeData[crimeData$CRIME_YEAR == 2010,]
+crime2011 <- crimeData[crimeData$CRIME_YEAR == 2011,]
+crime2012 <- crimeData[crimeData$CRIME_YEAR == 2012,]
+crime2013 <- crimeData[crimeData$CRIME_YEAR == 2013,]
+crime2014 <- crimeData[crimeData$CRIME_YEAR == 2014,]
+crime2015 <- crimeData[crimeData$CRIME_YEAR == 2015,]
+
+summary(crime2004)
+summary(crime2015)
+```
+
+The summary shows that overall crime has gone down from 2004 to 2015.  Great Job LAC!
+
+Plots to compare between 2004 and 2015.
+
+```{r YearsPlot2004to2009, cache=TRUE}
+#Using GGPLOT, plot the City Map for 2004 only
+mapPoints2004 <- map + geom_point(data=crime2004, aes(x=LONGITUDE, y=LATITUDE, colour=factor(CRIME_CATEGORY_DESCRIPTION)), alpha=.5, size=1) + theme(legend.position = "none")
+
+mapPoints2004
+
+mapPoints2005 <- map + geom_point(data=crime2005, aes(x=LONGITUDE, y=LATITUDE, colour=factor(CRIME_CATEGORY_DESCRIPTION)), alpha=.5, size=1) + theme(legend.position = "none")
+
+mapPoints2005
+
+mapPoints2006 <- map + geom_point(data=crime2006, aes(x=LONGITUDE, y=LATITUDE, colour=factor(CRIME_CATEGORY_DESCRIPTION)), alpha=.5, size=1) + theme(legend.position = "none")
+
+mapPoints2006
+
+mapPoints2007 <- map + geom_point(data=crime2007, aes(x=LONGITUDE, y=LATITUDE, colour=factor(CRIME_CATEGORY_DESCRIPTION)), alpha=.5, size=1) + theme(legend.position = "none")
+
+mapPoints2007
+
+mapPoints2008 <- map + geom_point(data=crime2008, aes(x=LONGITUDE, y=LATITUDE, colour=factor(CRIME_CATEGORY_DESCRIPTION)), alpha=.5, size=1) + theme(legend.position = "none")
+
+mapPoints2008
+
+mapPoints2009 <- map + geom_point(data=crime2009, aes(x=LONGITUDE, y=LATITUDE, colour=factor(CRIME_CATEGORY_DESCRIPTION)), alpha=.5, size=1) + theme(legend.position = "none")
+
+mapPoints2009
+```
+
+```{r YearsPlot2010to2015, cache=TRUE}
+#Using GGPLOT, plot the City Map for 2015 only
+mapPoints2010 <- map + geom_point(data=crime2010, aes(x=LONGITUDE, y=LATITUDE, colour=factor(CRIME_CATEGORY_DESCRIPTION)), alpha=.5, size=1) + theme(legend.position = "none")
+
+mapPoints2010
+
+mapPoints2011 <- map + geom_point(data=crime2011, aes(x=LONGITUDE, y=LATITUDE, colour=factor(CRIME_CATEGORY_DESCRIPTION)), alpha=.5, size=1) + theme(legend.position = "none")
+
+mapPoints2011
+
+mapPoints2012 <- map + geom_point(data=crime2012, aes(x=LONGITUDE, y=LATITUDE, colour=factor(CRIME_CATEGORY_DESCRIPTION)), alpha=.5, size=1) + theme(legend.position = "none")
+
+mapPoints2012
+
+mapPoints2013 <- map + geom_point(data=crime2013, aes(x=LONGITUDE, y=LATITUDE, colour=factor(CRIME_CATEGORY_DESCRIPTION)), alpha=.5, size=1) + theme(legend.position = "none")
+
+mapPoints2013
+
+mapPoints2014 <- map + geom_point(data=crime2014, aes(x=LONGITUDE, y=LATITUDE, colour=factor(CRIME_CATEGORY_DESCRIPTION)), alpha=.5, size=1) + theme(legend.position = "none")
+
+mapPoints2014
+
+mapPoints2015 <- map + geom_point(data=crime2015, aes(x=LONGITUDE, y=LATITUDE, colour=factor(CRIME_CATEGORY_DESCRIPTION)), alpha=.5, size=1) + theme(legend.position = "none")
+
+mapPoints2015
+```
+
+There is a strange concentration of color, zooming in we find that the crime type is at LAX airport.
+
+```{r FullCityPlotZoom, cache=TRUE}
+#Using GGPLOT, plot the City Map for all years
+lac <- get_map(location=c(lon=-118.411732, lat=33.950479), zoom=14,  maptype="roadmap") 
+map = ggmap(lac)
+
+mapPoints <- map + geom_point(data=crimeData, aes(x=LONGITUDE, y=LATITUDE, colour=factor(CRIME_CATEGORY_DESCRIPTION)), alpha=.5, size=1) + theme(legend.position = "none")
+
+mapPoints
+```
+
+```{r SaveTidyTinyData, cache=TRUE}
+saveToFile <- "CrimeData.csv"
+saveToFileSmall <- "CrimeDataSmall.csv"
+
+if (!file.exists(saveToFile))
+  write.table(crimeData, saveToFile, sep=",")
+
+if (!file.exists(saveToFileSmall))
+{
+  smallCrime <- crimeData[crimeData$CRIME_YEAR >= 2011,]
+  write.table(smallCrime, saveToFileSmall, sep=",")
+}
+```
