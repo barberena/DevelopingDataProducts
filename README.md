@@ -7,6 +7,8 @@ The source for this Shiny App and the Slidify Presentation is located at
 
 The Slidify presentation is located at [DropBox](https://dl.dropboxusercontent.com/u/32935862/LACCrimes/index.html). Sorry, I couldn't get Slidify to upload to rpubs, and I kept getting 404 errors when I tried to upload it to GitHub as a viewable html.  Also kept getting rCurl issues with the publish command.  But I managed to get the DropBox extension to work.  So that's what I had to use.
 
+The Shiny App is located at [https://barberena.shinyapps.io/LACCrimes/](https://barberena.shinyapps.io/LACCrimes/)
+
 This project was developed for the Coursera Project [Developing Data Products](https://www.coursera.org/specializations/jhu-data-science)
 
 ## Data
